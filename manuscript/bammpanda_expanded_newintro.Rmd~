@@ -58,11 +58,7 @@ produced. Using molecular clock models the resulting trees are time
 calibrated and so represent the absolute time duration of
 lineages. This increase in the availability of phylogenetic
 information spurred the development of a myriad of statistical methods
-that aim to estimate diversification rates. From simple constant-rate
-birth-death models (@Nee1994) to complex bayesian models
-(@Rabosky2014), through trait-dependent speciation and extinction
-(@Fitzjohn2012), these models were heavily used in the past two
-decades.
+that aim to estimate diversification rates.
 
 
 
