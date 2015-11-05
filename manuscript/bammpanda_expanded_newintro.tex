@@ -91,31 +91,31 @@
 
 Over the past two decades, it is possible to see the blooming and
 establishment of molecular phylogenies as important information used to
-estimate rates of diversification (Nee et al. (1994), ({\textbf{???}}),
-Ape, Geiger, Diversitree, BAMM). As reviewed in ({\textbf{???}}),
-different types of data obtained from these phylogenies (e.g.~branch
-lengths, topology, branching times, clade richness and ages) can be used
-to estimate diversification rates (e.g.~speciation/origination,
-extinction) as well as morphological/phenotypical evolution
-(e.g.~transition rates, variance). The use of those phylogenies have
-allowed researchers to evaluate the diversification dynamics of several
-types of organisms, and especially have allowed the study of fossil-poor
-clades such as birs for instance (({\textbf{???}}), Burin2015). However,
-some skepticism regarding the extent to which we can rely only on the
-molecular phylogenies was raised, due to the very small values of
-extinction rates commonly obtained when using only this type of data
-(Rabosky (2010), Quental and Marshall (2011)).
+estimate rates of diversification (Nee et al. (1994), Morlon (2014),
+Ape, Geiger, Diversitree, BAMM). As reviewed in Morlon (2014), different
+types of data obtained from these phylogenies (e.g.~branch lengths,
+topology, branching times, clade richness and ages) can be used to
+estimate diversification rates (e.g.~speciation/origination, extinction)
+as well as morphological/phenotypical evolution (e.g.~transition rates,
+variance). The use of those phylogenies have allowed researchers to
+evaluate the diversification dynamics of several types of organisms, and
+especially have allowed the study of fossil-poor clades such as birs for
+instance (Huang and Rabosky (2014), Burin2015). However, some skepticism
+regarding the extent to which we can rely only on the molecular
+phylogenies was raised, due to the very small values of extinction rates
+commonly obtained when using only this type of data (Rabosky (2010),
+Quental and Marshall (2011)).
 
 According to the fossil record most lineages that ever existed on the
 planet are already extinct and many of the ones that are present
 nowadays are in a decline phase (such as canids, rhynos, hyenas, horses)
-(({\textbf{???}}), ({\textbf{???}}), MORE REFS).
+(({\textbf{???}}), Silvestro et al. (2015), MORE REFS).
 
 Most lineages that ever existed on the planet are now extinct. It is
 estimated that 99\% of all biodiversity is not present in current days
 anymore, and from the remaining few some of them (such as canids,
 rhynos, hyenas and horses) are in decline of diversity
-(({\textbf{???}}), ({\textbf{???}}), MORE REFS). Due to this vast
+(({\textbf{???}}), Silvestro et al. (2015), MORE REFS). Due to this vast
 extinct diversity, studying past lineages can be of a great use to
 understand how biodiversity changed over time to get to the current
 picture. Paleontological studies have for years generated the most
@@ -135,7 +135,33 @@ a myriad of statistical methods that aim to estimate diversification
 rates. From simple constant-rate birth-death models (Nee et al. (1994))
 to complex bayesian models (({\textbf{???}})), through trait-dependent
 speciation and extinction (({\textbf{???}})), these models were heavily
-used in the past two decades.
+used in the past two decades. However molecular phylogenies are
+characterized by not showing clear signals of decline. For not having
+information from extinct species (especially due to the different nature
+of data used in both types of reconstructions), the lineage-through-time
+plots (that represents the number of lineages that were extant at each
+point in the history of the group) of molecular phylogenies always show
+an increase in diversity. This, however, does not can falsely lead us to
+think that all extant groups are either in an expansion phase or in a
+dynamic stability in terms of number of species. This goes against what
+is known from the fossil record. Silvestro et al. (2014) for example
+recently showed using fossil data that the family Rhinocerontidae was
+much more diverse in the past than it is today. Another caveat lies on
+the ability of those methods to correctly estimate extinction rates
+(Rabosky (2010) but see Beaulieu and O'Meara (2015)). The incorrect
+estimation of extinction rates would therefore prevent the use of
+molecular phylogenies to assess information about the diversification
+trajectory of a group of organisms. Some simple approaches were proposed
+to try to circumvent these issues. Pybus and Harvey (2000) have
+developed the \(\gamma\) statistic, that is based on evaluating whether
+the nodes were more concentrated closer to the root or the tips of a
+phylogeny as a measure of when have the speciation processes happened in
+great frequency, compared to a null model of constant probability. This
+way, values of \(\gamma\) lower than -1.645 would indicate that the
+nodes are more concentrated close to the root of the tree. Nevertheless,
+this does not necessarily mean that the clade is in decline, since
+clades that show a \emph{plateau} of diversity also show significantly
+negative values of \(\gamma\).
 
 \begin{itemize}
 \item
@@ -268,10 +294,28 @@ constant rate values.
 \addcontentsline{toc}{section}{References}
 
 \hyperdef{}{refs}{\label{refs}}
+\hyperdef{}{ref-Beaulieu2015}{\label{ref-Beaulieu2015}}
+Beaulieu J.M., O'Meara B.C. 2015. Extinction can be estimated from
+moderately sized molecular phylogenies. Evolution. 69:1036--1043.
+
+\hyperdef{}{ref-Huang2014}{\label{ref-Huang2014}}
+Huang H., Rabosky D.L. 2014. Sexual Selection and Diversification:
+Reexamining the Correlation between Dichromatism and Speciation Rate in
+Birds. The American Naturalist. 184:E101--E114.
+
+\hyperdef{}{ref-Morlon2014}{\label{ref-Morlon2014}}
+Morlon H. 2014. Phylogenetic approaches for studying diversification.
+Ecology letters. 17:508--25.
+
 \hyperdef{}{ref-Nee1994}{\label{ref-Nee1994}}
 Nee S., May R.M., Harvey P.H. 1994. The reconstructed evolutionary
 process. Philosophical transactions of the Royal Society of London.
 Series B, Biological sciences.
+
+\hyperdef{}{ref-Pybus2000}{\label{ref-Pybus2000}}
+Pybus O.G., Harvey P.H. 2000. Testing macro-evolutionary models using
+incomplete molecular phylogenies. Proceedings. Biological sciences / The
+Royal Society. 267:2267--72.
 
 \hyperdef{}{ref-Quental2011}{\label{ref-Quental2011}}
 Quental T.B., Marshall C.R. 2011. The molecular phylogenetic signature
@@ -280,5 +324,16 @@ of clades in decline. PloS one. 6:e25780.
 \hyperdef{}{ref-Rabosky2010}{\label{ref-Rabosky2010}}
 Rabosky D.L. 2010. Extinction rates should not be estimated from
 molecular phylogenies. Evolution. 64:1816--1824.
+
+\hyperdef{}{ref-Silvestro2015}{\label{ref-Silvestro2015}}
+Silvestro D., Antonelli A., Salamin N., Quental T.B. 2015. The role of
+clade competition in the diversification of North American canids.
+Proceedings of the National Academy of Sciences of the United States of
+America. 112:8684--8689.
+
+\hyperdef{}{ref-Silvestro2014}{\label{ref-Silvestro2014}}
+Silvestro D., Schnitzler J., Liow L.H., Antonelli A., Salamin N. 2014.
+Bayesian Estimation of Speciation and Extinction from Incomplete Fossil
+Occurrence Data. Systematic biology.
 
 \end{document}

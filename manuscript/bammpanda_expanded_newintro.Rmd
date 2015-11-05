@@ -62,7 +62,33 @@ that aim to estimate diversification rates. From simple constant-rate
 birth-death models (@Nee1994) to complex bayesian models
 (@Rabosky2014), through trait-dependent speciation and extinction
 (@Fitzjohn2012), these models were heavily used in the past two
-decades.
+decades. However molecular phylogenies are characterized by not
+showing clear signals of decline. For not having information from
+extinct species (especially due to the different nature of data used
+in both types of reconstructions), the lineage-through-time
+plots (that represents the number of lineages that were extant at each
+point in the history of the group) of molecular phylogenies always
+show an increase in diversity. This, however, does not can falsely
+lead us to think that all extant groups are either in an expansion
+phase or in a dynamic stability in terms of number of species. This
+goes against what is known from the fossil record. @Silvestro2014 for
+example recently showed using fossil data that the family
+Rhinocerontidae was much more diverse in the past than it is
+today. Another caveat lies on the ability of those methods to
+correctly estimate extinction rates (@Rabosky2010 but see
+@Beaulieu2015). The incorrect estimation of extinction rates would
+therefore prevent the use of molecular phylogenies to assess
+information about the diversification trajectory of a group of
+organisms. Some simple approaches were proposed to try to circumvent
+these issues. @Pybus2000 have developed the $\gamma$ statistic, that
+is based on evaluating whether the nodes were more concentrated closer to the
+root or the tips of a phylogeny as a measure of when have the
+speciation processes happened in great frequency, compared to a null
+model of constant probability. This way, values of $\gamma$ lower than -1.645
+would indicate that the nodes are more concentrated close to the root
+of the tree. Nevertheless, this does not necessarily mean that the
+clade is in decline, since clades that show a *plateau* of diversity
+also show significantly negative values of $\gamma$.
 
 
 
