@@ -37,6 +37,31 @@ planet are already extinct and many of the ones that are present
 nowadays are in a decline phase (such as canids, rhynos, hyenas,
 horses) (@Quental2013, @Silvestro2015, MORE REFS).
 
+Most lineages that ever existed on the planet are now
+extinct. It is estimated that 99% of all biodiversity is not present
+in current days anymore, and from the remaining few some of them (such
+as canids, rhynos, hyenas and horses) are in decline of diversity
+(@Quental2013, @Silvestro2015, MORE REFS). Due to this vast extinct
+diversity, studying past lineages can be of a great use to understand
+how biodiversity changed over time to get to the current
+picture. Paleontological studies have for years generated the most
+diverse results and conclusions about diversity dynamics of extinct
+lineages, and fossils continue to be an extremely important source of
+information. However, not all groups have a fossil record good enough
+to allow researchers to reliably observe patterns and infer processes
+about their life history. So another way of infering about the past
+history of fossil-poor clades is using molecular phylogenies.
+
+With the advent of advanced molecular techniques, each day more
+high quality molecular phylogenies for all kinds of organisms are
+produced. Using molecular clock models the resulting trees are time
+calibrated and so represent the absolute time duration of
+lineages. This increase in the availability of phylogenetic
+information spurred the development of a myriad of statistical methods
+that aim to estimate diversification rates.
+
+
+
 - Most lineages that existed are already extinct, and some of the
 extant is currently in decline
 
