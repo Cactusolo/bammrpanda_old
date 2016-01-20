@@ -1,0 +1,293 @@
+data <- read.csv("~/Dropbox/bamm_panda/bvardcst/results/fulldata_bvardcst.csv")
+
+tree <- read.tree("~/Documents/temp_bammpanda/bvardcst/complete/80/6_80comp.txt")
+tree.mol <- read.tree("./trees/80/6_mol80_8.162_0.921_0.128_1.164_21_.txt")
+
+source("~/Dropbox/collaborations/Le_Codes/branching.times.with.extinction.R")
+
+
+pitoco <- data$time.80[6]-max(branching.times.with.extinct(tree))
+
+
+# Function to calculate species richness in a given point in time
+rich <- function(x,parms){
+    a <- parms[1]
+    b <- parms[2]
+    c <- parms[3]
+    res <- exp((a*(-exp(-b*x))+a-(b*c*x))/b);return(res)
+}
+
+## trees80 <- lapply(paste0("~/Dropbox/bamm_panda/bcstdvar/trees/80/",1:2000,"_80mol.txt"),read.tree)
+## trees50 <- lapply(paste0("~/Dropbox/bamm_panda/bcstdvar/trees/50/",1:2000,"_50mol.txt"),read.tree)
+## trees20 <- lapply(paste0("~/Dropbox/bamm_panda/bcstdvar/trees/20/",1:2000,"_20mol.txt"),read.tree)
+## trees.s20 <- lapply(paste0("~/Dropbox/bamm_panda/bcstdvar/trees/short20/",1:2000,"_short20mol.txt"),read.tree)
+
+## cga.80 <- unlist(lapply(trees80,function(x) max(branching.times(x))))
+## cga.50 <- unlist(lapply(trees50,function(x) max(branching.times(x))))
+## cga.20 <- unlist(lapply(trees20,function(x) max(branching.times(x))))
+## cga.s20 <- unlist(lapply(trees.s20,function(x) max(branching.times(x))))
+
+## bcstdvar$cga.80 <- cga.80
+## bcstdvar$cga.50 <- cga.50
+## bcstdvar$cga.20 <- cga.20
+## bcstdvar$cga.s20 <- cga.s20
+
+## write.table(bcstdvar,file="~/Dropbox/bamm_panda/bcstdvar/results/fulldata_bcstdvar.csv",quote=FALSE,row.names=FALSE,sep=",")
+
+
+par(mfrow=c(2,1))
+
+
+pdf("phylo_timetravel_2.pdf")
+plot(tree,show.tip.label=FALSE);axisPhylo()
+abline(v=max(branching.times.with.extinct(tree)),col=2, lty=2, lwd=2)
+abline(v=data$time.50[6], col=3, lty=2, lwd=2)
+abline(v=data$time.20[6], col=4, lty=2, lwd=2)
+abline(v=data$time.s20[6], col=6, lty=2, lwd=2)
+dev.off()
+
+plot(y=rich(x=seq(pitoco,data$time.80[6],0.01)-pitoco,parms=c(data$lambda.init.sim.80[6],data$alpha.sim.80[6],data$mu.sim.80[6])),x=seq(pitoco,data$time.80[6],0.01)-pitoco,type="l",ylab="Species Richness",xlab="Time")
+abline(v=max(branching.times.with.extinct(tree)),col=2, lty=2)
+abline(v=data$time.50[6], col=3, lty=2)
+abline(v=data$time.20[6], col=4, lty=2)
+abline(v=data$time.s20[6], col=6, lty=2)
+
+
+rtt <- data.frame("rich"=rich(x=seq(pitoco,data$time.80[6],0.01)-pitoco,parms=c(data$lambda.init.sim.80[6],data$alpha.sim.80[6],data$mu.sim.80[6])),"time"=seq(pitoco,data$time.80[6],0.01)-pitoco)
+
+library(ggplot2)
+library(devtools)
+source("http://bioconductor.org/biocLite.R")
+biocLite("ggtree")
+library(ggtree)
+
+g1 <- ggplot(data=rtt,aes(x=time,y=rich)) + geom_line() + theme_bw() + geom_vline(xintercept=max(branching.times.with.extinct(tree)),linetype="longdash",colour="red") + geom_vline(xintercept=data$time.50[6],linetype="longdash",colour="green3") + geom_vline(xintercept=data$time.20[6],linetype="longdash",colour="blue") + geom_vline(xintercept=data$time.s20[6],linetype="longdash", colour="magenta") + annotate("text",x=max(branching.times.with.extinct(tree)) + 0.2,y=200,label="80%",colour="red") + annotate("text",x=data$time.50[6] - 0.2,y=200,label="50%",colour="green3") + annotate("text",x=data$time.20[6] - 0.2,y=200,label="20%",colour="blue") + annotate("text",x=data$time.s20[6] - 0.35,y=200,label="short20%",colour="magenta") + theme(axis.text.x=element_blank()) + ylab("Species richness") + xlab("Time")
+
+ggsave("diversity_timetravel_2.pdf",g1)
+
+
+
+ggsave("ntip80.pdf",ggplot(data=data,aes(x=ntip.80)) + geom_histogram(binwidth=1) + theme_bw() + xlab("Number of Species") + ylab("Count"))
+ggsave("simtime.pdf",ggplot(data=data,aes(x=time.80)) + geom_histogram(binwidth=1) + theme_bw() + xlab("Tree Length (Myrs)") + ylab("Count"))
+ggsave("gamma80.pdf",ggplot(data=data,aes(x=gamma.80)) + geom_histogram(binwidth=0.01) + theme_bw() + geom_vline(xintercept=0,linetype="longdash",colour="red") + xlab("Corrected Gamma Statistic") + ylab("Count"))
+
+
+bvardcst <- data
+bcstdvar <- read.csv("~/Dropbox/bamm_panda/bcstdvar/results/fulldata_bcstdvar.csv")
+
+
+## BVARDCST mu by lambda init
+bvdc <- ggplot(data=bvardcst,aes(x=lambda.init.sim.80,y=mu.sim.80)) + geom_point(aes(color=alpha.sim.80)) + theme_bw() + theme(legend.position="bottom") + scale_colour_gradient(low="#24C6DC",high="#514A9D",name="Alpha") + ylim(0,10) + xlim(0,10) + xlab("Initial Lambda") + ylab("Mu")
+## BCSTDVAR mu final by lambda
+bcdv <- ggplot(data=bcstdvar,aes(x=lambda.sim,y=mu_0.sim)) + geom_point(aes(color=beta.sim)) + theme_bw() + theme(legend.position="bottom") + scale_colour_gradient(low="#FFC837",high="#FF8008",name="Beta") + ylim(0,10) + xlim(0,10) + xlab("Lambda") + ylab("Final Mu")
+
+ggsave("bvardcst_parspace.pdf",bvdc)
+ggsave("bcstdvar_parspace.pdf",bcdv)
+
+## BVARDCST lambda final
+b <- ggplot(data=bvardcst,aes(x=lambda.final.sim.80,y=mu.sim.80)) +
+    geom_point(aes(colour=alpha.sim.80)) +
+        theme_bw() +
+            theme(legend.position="bottom") +
+                scale_colour_gradient(low="#24C6DC",high="#514A9D") +
+                    ylim(0,2.5) +
+                        xlim(0,2.5)
+
+bvdc.col <- colorRampPalette(c("#24C6DC","#514A9D"))
+bcdv.col <- colorRampPalette(c("#FFC837","#FF8008"))
+
+
+## BVARDCST R initial
+a <- ggplot(data=bvardcst,aes(x=lambda.init.sim.80 - mu.sim.80)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+                xlim(0,10) +
+                    ylim(0,0.25) +
+                        xlab("Initial Net Diversification") +
+                            ylab("Probability Density")
+ggsave("bvardcst_initial_r.pdf",a)
+
+## BCSTDVAR R initial
+b <- ggplot(data=bcstdvar,aes(x=lambda.sim)) +
+    geom_histogram(aes(y=..density..),fill=bcdv.col(10)[1],alpha=0.75) +
+        geom_density(colour=bcdv.col(10)[10],size=1.5,fill=bcdv.col(10)[10],alpha=0.25) +
+            theme_bw() +
+                xlim(0,10) +
+                    ylim(0,0.25) +
+                        xlab("Initial Net Diversification") +
+                            ylab("Probability Density")
+ggsave("bcstdvar_initial_r.pdf",b)
+
+## BVARDCST R final
+d <- ggplot(data=bvardcst,aes(x=lambda.final.sim.80 - mu.sim.80)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Final Net Diversification") +
+                            ylab("Probability Density")
+ggsave("bvardcst_final_r.pdf",d)
+
+## BCSTDVAR R final
+e <- ggplot(data=bcstdvar,aes(x=lambda.sim - mu_0.sim)) +
+    geom_histogram(aes(y=..density..),fill=bcdv.col(10)[1],alpha=0.75) +
+        geom_density(colour=bcdv.col(10)[10],size=1.5,fill=bcdv.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Initial Net Diversification") +
+                            ylab("Probability Density")
+ggsave("bcstdvar_final_r.pdf",e)
+
+## BVARDCST Crown Group Age
+g <- ggplot(bvardcst,aes(x=cga.80)) +
+    geom_histogram(aes(y=..density..),fill=bcdv.col(10)[1],alpha=0.75) +
+        geom_density(colour=bcdv.col(10)[10],size=1.5,fill=bcdv.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Crown Group Age") +
+                            ylab("Probability Density")
+ggsave("bcstdvar_final_r.pdf",g)
+
+## BCSTDVAR Crown Group Age
+h <- ggplot(data=bcstdvar,aes(x=cga.80)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Crown Group Age") +
+                            ylab("Probability Density")
+ggsave("bcstdvar_final_r.pdf",h)
+
+## BVARDCST ntip 80
+h <- ggplot(data=bvardcst,aes(x=ntip.80)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75,binwidth=max(bvardcst$ntip.80)/100) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Number of Tips") +
+                            ylab("Probability Density")
+ggsave("bvardcst_ntip_80.pdf",h)
+
+## BVARDCST ntip 80
+h <- ggplot(data=bvardcst,aes(x=ntip.50)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75,binwidth=max(bvardcst$ntip.50)/100) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Number of Tips") +
+                            ylab("Probability Density")
+ggsave("bvardcst_ntip_50.pdf",h)
+
+## BVARDCST ntip 20
+h <- ggplot(data=bvardcst,aes(x=ntip.20)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75,binwidth=max(bvardcst$ntip.20)/100) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Number of Tips") +
+                            ylab("Probability Density")
+ggsave("bvardcst_ntip_20.pdf",h)
+
+## BVARDCST ntip short20
+h <- ggplot(data=bvardcst,aes(x=ntip.s20)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75,binwidth=max(bvardcst$ntip.s20)/100) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Number of Tips") +
+                            ylab("Probability Density")
+ggsave("bvardcst_ntip_s20.pdf",h)
+
+
+
+## BVARDCST gamma 80
+h <- ggplot(data=bvardcst,aes(x=gamma.80)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Corrected Gamma") +
+                            ylab("Probability Density")
+ggsave("bvardcst_gamma_80.pdf",h)
+
+## BVARDCST gamma 80
+h <- ggplot(data=bvardcst,aes(x=gamma.50)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Corrected Gamma") +
+                            ylab("Probability Density")
+ggsave("bvardcst_gamma_50.pdf",h)
+
+## BVARDCST gamma 20
+h <- ggplot(data=bvardcst,aes(x=gamma.20)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Corrected Gamma") +
+                            ylab("Probability Density")
+ggsave("bvardcst_gamma_20.pdf",h)
+
+## BVARDCST gamma short20
+h <- ggplot(data=bvardcst,aes(x=gamma.s20)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Corrected Gamma") +
+                            ylab("Probability Density")
+ggsave("bvardcst_gamma_s20.pdf",h)
+
+
+
+
+## BVARDCST decline.length 80
+h <- ggplot(data=bvardcst,aes(x=decline.length.80)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75,binwidth=max(bvardcst$decline.length.80)/100) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Corrected Decline.Length") +
+                            ylab("Probability Density")
+ggsave("bvardcst_decline_length_80.pdf",h)
+
+## BVARDCST decline.length 80
+h <- ggplot(data=bvardcst,aes(x=decline.length.50)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75,binwidth=max(bvardcst$decline.length.50)/100) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Corrected Decline.Length") +
+                            ylab("Probability Density")
+ggsave("bvardcst_decline_length_50.pdf",h)
+
+## BVARDCST decline.length 20
+h <- ggplot(data=bvardcst,aes(x=decline.length.20)) +
+    geom_histogram(aes(y=..density..),fill=bvdc.col(10)[1],alpha=0.75,binwidth=max(bvardcst$decline.length.20)/100) +
+        geom_density(colour=bvdc.col(10)[10],size=1.5,fill=bvdc.col(10)[10],alpha=0.25) +
+            theme_bw() +
+#                xlim(0,10) +
+#                    ylim(0,0.25) +
+                        xlab("Corrected Decline.Length") +
+                            ylab("Probability Density")
+ggsave("bvardcst_decline_length_20.pdf",h)
+
+
+

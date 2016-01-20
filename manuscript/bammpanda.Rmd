@@ -8,7 +8,7 @@ output:
     latex_engine: xelatex
     keep_tex: true
 mainfont: Calibri Light
-fontsize: 12pt	
+fontsize: 12pt
 ---
 
 # Introduction
@@ -18,13 +18,13 @@ fontsize: 12pt
   extinction). Skepticism comes from Rabosky 2010, Quental & Marshall
   2011, due to extinction rates being frequently estimated with very
   small values using molecular phylogenies.
-  
-	 
+
+
 - However, according to the fossil record most lineages are already
   extinct and many of them are in a declining phase (examples: canids,
   rhinos, hyena, horses).
-  
-	 
+
+
 - Lineages are characterized by an expansion and a decline phase and
   it is still an open question whether we can detect it or not using
   molecular phylogenies (Quental & Marshall 2011 suggest with a simple
@@ -32,34 +32,34 @@ fontsize: 12pt
   between decline and stable diversity; Morlon *et al.* 2011, with more
   sophisticated methods were able to detect decline; but discuss the
   limitation of their results).
-   
+
 - However, how general are the results from Morlon *et al.*? Lack of
   papers that have used these methods, and even greater lack of papers
   that actually found decline with these methods.
-  
+
 - Curiously BiSSE-like models suggest that some traits might be
   associated with negative diversification rates (Goldberg *et
   al.* 2010, Burin *et al. 2015*, among others).
-  
+
 - Additionally, more recently Beaulieau & O'Meara shown by revisiting
   Rabosky's 2010 that extinction rates can be reasonably estimated in
   some scenarios, although these scenarios are limited by not
   including decline in diversification.
-  
+
 - New methods (Morlon *et al.* (2011) and Rabosky (2014)) allow for
   extinction to be higher than speciation although none of these two
   methods were tested thoroughly in their capacity of detecting
   declines in different points in time. Liow et al. 2010 show that the
   signature of a given diversity dynamics might change as time goes
   by.
-   
+
 - Here we present a broad analysis to compare their ability to detect
   diversity decline in different evolutionary scenarios over different
   viable parameter combinations within a comprehensive parameter
   space. Mention that our aim is not only to assess the potential of
   both methods in estimating the true rates, but also how do both
   perform when evaluating the diversity trajectory over time.
-   
+
 - In summary, most of the groups analyzed would still be expanding
 which is in disagreement with the trend suggested by the fossil
 record.
@@ -151,3 +151,10 @@ point mean rate estimates for discrete time intervals along a tree
 history. Thus, in order to compare both models, we analyzes only the
 initial and final values of the varying rate and of net
 diversification as well as the constant rate values.
+
+
+
+## Acknowledgements
+
+David Bapst
+Klaus Schliep

@@ -88,27 +88,18 @@ model of constant probability. This way, values of $\gamma$ lower than -1.645
 would indicate that the nodes are more concentrated close to the root
 of the tree. Nevertheless, this does not necessarily mean that the
 clade is in decline, since clades that show a *plateau* of diversity
-also show significantly negative values of $\gamma$.
+also show significantly negative values of $\gamma$. Additionally, it
+is known that $\gamma$ is highly sensitive to variations in speciation
+rates, but not so much for varying extinction rates.
 
 
-
-- Increasing number of good quality phylogenies (due to new
-  techniques) stimulated the spurr of several diversification models
-  based on these phylogenies
-
-- Some examples of methods
-
-- However there are some caveats: ltt plots (common way of evaluating
-  diversity dynamics) do not show decline (at most show
-  deccelleration). In summary, most of the groups analyzed would still
-  be expanding which is in disagreement with the trend suggested by
-  the fossil record.
-
-- Concerns about correct estimation of extinction rates from
-molecular phylogenies
-
-- Simple approaches proposed: gamma statistic. Too simple, it is
-difficult to distinguish between decline and deccelleration.
+Recently developed methods claim to be able to detect decline in
+diversity using molecular phylogenies (@Morlon2011,
+@Rabosky2014). RPANDA (@Morlon2011) is a likelihood-based model that
+allows the fitting and selection of multiple models on *a priori*
+selected trees, whereas BAMM (@Rabosky2014) relies on a
+reversible-jump MCMC algorithm to detect shifts in diversification
+rates and get average rates for the whole tree.
 
 - Additionally, Liow shows that the signature of a given
   diversification dynamics may change as time goes by (different
@@ -116,7 +107,7 @@ difficult to distinguish between decline and deccelleration.
 
 - Recently developed methods claim to be able to detect decline in
   diversity using molecular phylogenies. However, those methods
-  haven't been thoroughly tested.
+  haven't been thoroughly tested. Morlon et al. PLoSB (2010), Morlon et al. PNAS (2011), Condamine et al. Eco Lett (2013), Morlon et al. Eco Lett (2014), Manceau et al. Eco Lett (2015) and Lewitus and Morlon (submitted)
 
 - It is crucial to know how powerful/reliable are these new two
   methods in relation to detecting or not decline and also in relation
