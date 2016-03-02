@@ -1,7 +1,7 @@
 data <- read.csv("~/Dropbox/bamm_panda/bvardcst/results/fulldata_bvardcst.csv")
 
 tree <- read.tree("~/Documents/temp_bammpanda/bvardcst/complete/80/6_80comp.txt")
-tree.mol <- read.tree("./trees/80/6_mol80_8.162_0.921_0.128_1.164_21_.txt")
+tree.mol <- read.tree("~/Dropbox/bamm_panda/bvardcst/trees/80/6_mol80_8.162_0.921_0.128_1.164_21_.txt")
 
 source("~/Dropbox/collaborations/Le_Codes/branching.times.with.extinction.R")
 
@@ -105,6 +105,16 @@ bcdv <- ggplot(data=bcstdvar,aes(x=lambda.sim,y=mu_0.sim)) + geom_point(aes(colo
 ggsave("bvardcst_parspace.pdf",bvdc)
 ggsave("bcstdvar_parspace.pdf",bcdv)
 
+
+
+
+
+bvdc.col <- colorRampPalette(c("#24C6DC","#514A9D"))
+bcdv.col <- colorRampPalette(c("#FFC837","#FF8008"))
+
+
+
+
 ## BVARDCST lambda final
 b <- ggplot(data=bvardcst,aes(x=lambda.final.sim.80,y=mu.sim.80)) +
     geom_point(aes(colour=alpha.sim.80)) +
@@ -114,8 +124,6 @@ b <- ggplot(data=bvardcst,aes(x=lambda.final.sim.80,y=mu.sim.80)) +
                     ylim(0,2.5) +
                         xlim(0,2.5)
 
-bvdc.col <- colorRampPalette(c("#24C6DC","#514A9D"))
-bcdv.col <- colorRampPalette(c("#FFC837","#FF8008"))
 
 
 ## BVARDCST R initial
@@ -445,6 +453,100 @@ h <- ggplot(data=bcstdvar,aes(x=decline.length.20)) +
                         xlab("Corrected Decline.Length") +
                             ylab("Probability Density")
 ggsave("bcstdvar_decline_length_20.pdf",h)
+
+
+
+## Calculating gamma "normal"
+bvdc.trees80 <- lapply(as.list(paste0("~/Dropbox/bamm_panda/bvardcst/trees/80/",1:2000,"_mol80.txt")),read.tree)
+bvdc.trees50 <- lapply(as.list(paste0("~/Dropbox/bamm_panda/bvardcst/trees/50/",1:2000,"_mol50.txt")),read.tree)
+bvdc.trees20 <- lapply(as.list(paste0("~/Dropbox/bamm_panda/bvardcst/trees/20/",1:2000,"_mol20.txt")),read.tree)
+bvdc.trees.s20 <- lapply(as.list(paste0("~/Dropbox/bamm_panda/bvardcst/trees/short20/",1:2000,"_s20mol.txt")),read.tree)
+
+bcdv.trees80 <- lapply(as.list(paste0("~/Dropbox/bamm_panda/bcstdvar/trees/80/",1:2000,"_80mol.txt")),read.tree)
+bcdv.trees50 <- lapply(as.list(paste0("~/Dropbox/bamm_panda/bcstdvar/trees/50/",1:2000,"_50mol.txt")),read.tree)
+bcdv.trees20 <- lapply(as.list(paste0("~/Dropbox/bamm_panda/bcstdvar/trees/20/",1:2000,"_20mol.txt")),read.tree)
+bcdv.trees.s20 <- lapply(as.list(paste0("~/Dropbox/bamm_panda/bcstdvar/trees/short20/",1:2000,"_short20mol.txt")),read.tree)
+
+gamma.bvdc.80 <- unlist(lapply(bvdc.trees80,gammaStat))
+gamma.bvdc.50 <- unlist(lapply(bvdc.trees50,gammaStat))
+gamma.bvdc.20 <- unlist(lapply(bvdc.trees20,gammaStat))
+gamma.bvdc.s20 <- unlist(lapply(bvdc.trees.s20,gammaStat))
+
+gamma.bcdv.80 <- unlist(lapply(bcdv.trees80,gammaStat))
+gamma.bcdv.50 <- unlist(lapply(bcdv.trees50,gammaStat))
+gamma.bcdv.20 <- unlist(lapply(bcdv.trees20,gammaStat))
+gamma.bcdv.s20 <- unlist(lapply(bcdv.trees.s20,gammaStat))
+
+bvardcst$gamma.orig.80 <- gamma.bvdc.80
+bvardcst$gamma.orig.50 <- gamma.bvdc.50
+bvardcst$gamma.orig.20 <- gamma.bvdc.20
+bvardcst$gamma.orig.s20 <- gamma.bvdc.s20
+
+bcstdvar$gamma.orig.80 <- gamma.bcdv.80
+bcstdvar$gamma.orig.50 <- gamma.bcdv.50
+bcstdvar$gamma.orig.20 <- gamma.bcdv.20
+bcstdvar$gamma.orig.s20 <- gamma.bcdv.s20
+
+write.table(bvardcst, "./bvardcst.csv", quote = FALSE, row.names = FALSE, sep = ",")
+write.table(bcstdvar, "./bcstdvar.csv", quote = FALSE, row.names = FALSE, sep = ",")
+
+
+#### Violin plots
+
+fulldata <- data.frame("gamma.c80" = c(bvardcst$gamma.80,bcstdvar$gamma.80), "gamma.c50" = c(bvardcst$gamma.50,bcstdvar$gamma.50), "gamma.c20" = c(bvardcst$gamma.20,bcstdvar$gamma.20), "gamma.cs20" = c(bvardcst$gamma.s20,bcstdvar$gamma.s20), "ntip80" = c(bvardcst$ntip.80,bcstdvar$ntip80), "ntip50" = c(bvardcst$ntip.50,bcstdvar$ntip50), "ntip20" = c(bvardcst$ntip.20,bcstdvar$ntip20), "ntips20" = c(bvardcst$ntip.s20,bcstdvar$ntip_s20), "declen80" = c(bvardcst$decline.length.80, bcstdvar$decline.length.80), "declen50" = c(bvardcst$decline.length.50, bcstdvar$decline.length.50), "declen20" = c(bvardcst$decline.length.20, bcstdvar$decline.length.20))
+
+fulldata <- data.frame("gamma.c" = c(bvardcst$gamma.80, bvardcst$gamma.50, bvardcst$gamma.20, bvardcst$gamma.s20, bcstdvar$gamma.80, bcstdvar$gamma.50, bcstdvar$gamma.20, bcstdvar$gamma.s20), "ntip" = c(bvardcst$ntip.80, bvardcst$ntip.50, bvardcst$ntip.20, bvardcst$ntip.s20, bcstdvar$ntip80, bcstdvar$ntip50, bcstdvar$ntip20, bcstdvar$ntip_s20), "declen" = c(bvardcst$decline.length.80, bvardcst$decline.length.50, bvardcst$decline.length.20, rep(NA,2000), bcstdvar$decline.length.80, bcstdvar$decline.length.50, bcstdvar$decline.length.20, rep(NA,2000)), "gamma" = c(gamma.bvdc.80, gamma.bvdc.50, gamma.bvdc.20, gamma.bvdc.s20, gamma.bcdv.80, gamma.bcdv.50, gamma.bcdv.20, gamma.bcdv.s20), "time" = factor(rep(rep(c("-80%","-50%","-20%","short20"),each=2000),2), levels = c("short20", "-20%", "-50%", "-80%")), "scenario" = c(rep("sp_var",8000),rep("ex_var",8000)))
+
+ggplot(data=fulldata, aes(x=1, colour = scenario, fill = scenario)) +
+    geom_violin(aes(y=gamma.c), scale = "width", trim = FALSE) +
+    scale_colour_manual(values=c(bvdc.col(10)[10],bcdv.col(10)[10]), guide = FALSE) +
+    scale_fill_manual(values=c(paste0(bvdc.col(10)[5],"90"),paste0(bcdv.col(10)[5],"90")), name = "Scenario") +
+    #geom_point(aes(y=median(gamma.c), colour = scenario)) +
+    theme_bw() +
+    xlab("Time Slice") +
+    ylab("Corrected Gamma") +
+    theme(legend.position = "bottom", axis.ticks = element_blank(), axis.text.x = element_blank()) +
+    facet_grid(.~time)
+
+ggsave("gamma_corrected_per_time.pdf")
+
+ggplot(data=fulldata, aes(x = 1, colour = scenario, fill = scenario)) +
+    geom_violin(aes(y=gamma), scale = "width", trim = FALSE) +
+    scale_colour_manual(values=c(bvdc.col(10)[10],bcdv.col(10)[10]), guide = FALSE) +
+    scale_fill_manual(values=c(paste0(bvdc.col(10)[5],"90"),paste0(bcdv.col(10)[5],"90")), name = "Scenario") +
+    theme_bw() +
+    xlab("Time Slice") +
+    ylab("Decline Length (MY)") +
+    theme(legend.position = "bottom", axis.ticks = element_blank(), axis.text.x = element_blank()) +
+    facet_grid(.~time)
+
+ggsave("gamma_per_time.pdf")
+
+ggplot(data=fulldata, aes(x = 1, colour = scenario, fill = scenario)) +
+    geom_violin(aes(y=ntip), scale = "width", trim = FALSE) +
+    scale_colour_manual(values=c(bvdc.col(10)[10],bcdv.col(10)[10]), guide = FALSE) +
+    scale_fill_manual(values=c(paste0(bvdc.col(10)[5],"90"),paste0(bcdv.col(10)[5],"90")), name = "Scenario") +
+    theme_bw() +
+    xlab("Time Slice") +
+    ylab("Number of Tips") +
+    theme(legend.position = "bottom", axis.ticks = element_blank(), axis.text.x = element_blank()) +
+    facet_grid(.~time)
+
+ggsave("ntip_per_time.pdf")
+
+ggplot(data=fulldata, aes(x = 1, colour = scenario, fill = scenario)) +
+    geom_violin(aes(y=declen), scale = "width", trim = FALSE) +
+    scale_colour_manual(values=c(bvdc.col(10)[10],bcdv.col(10)[10]), guide = FALSE) +
+    scale_fill_manual(values=c(paste0(bvdc.col(10)[5],"90"),paste0(bcdv.col(10)[5],"90")), name = "Scenario") +
+    theme_bw() +
+    xlab("Time Slice") +
+    ylab("Decline Length (MY)") +
+    theme(legend.position = "bottom", axis.ticks = element_blank(), axis.text.x = element_blank()) +
+    facet_grid(.~time)
+
+ggsave("decline_length_per_time.pdf")
+
+
 
 
 

@@ -1,0 +1,84 @@
+bvardcst <- read.csv("./bvardcst.csv")
+bcstdvar <- read.csv("./bcstdvar.csv")
+
+bvdc.col <- colorRampPalette(c("#24C6DC","#514A9D"))
+bcdv.col <- colorRampPalette(c("#FFC837","#FF8008"))
+
+fulldata <- data.frame(
+    "gamma.c" = c(bvardcst$gamma.80, bvardcst$gamma.50, bvardcst$gamma.20, bvardcst$gamma.s20, bcstdvar$gamma.80, bcstdvar$gamma.50, bcstdvar$gamma.20, bcstdvar$gamma.s20),
+    "ntip" = c(bvardcst$ntip.80, bvardcst$ntip.50, bvardcst$ntip.20, bvardcst$ntip.s20, bcstdvar$ntip80, bcstdvar$ntip50, bcstdvar$ntip20, bcstdvar$ntip_s20),
+    "declen" = c(bvardcst$decline.length.80, bvardcst$decline.length.50, bvardcst$decline.length.20, rep(NA,2000), bcstdvar$decline.length.80, bcstdvar$decline.length.50, bcstdvar$decline.length.20, rep(NA,2000)),
+    "gamma.orig" = c(bvardcst$gamma.orig.80, bvardcst$gamma.orig.50, bvardcst$gamma.orig.20, bvardcst$gamma.orig.s20, bcstdvar$gamma.orig.80, bcstdvar$gamma.orig.50, bcstdvar$gamma.orig.20, bcstdvar$gamma.orig.s20),
+    "declen.relative.total" = c(bvardcst$decline.length.80, bvardcst$decline.length.50, bvardcst$decline.length.20, rep(NA,2000), bcstdvar$decline.length.80, bcstdvar$decline.length.50, bcstdvar$decline.length.20, rep(NA,2000))/c(bvardcst$time.80, bvardcst$time.50, bvardcst$time.20, bvardcst$time.s20 ,bcstdvar$time80, bcstdvar$time50, bcstdvar$time20, bcstdvar$time_s20),
+    "total.length" = c(bvardcst$time.80, bvardcst$time.50, bvardcst$time.20, bvardcst$time.s20 ,bcstdvar$time80, bcstdvar$time50, bcstdvar$time20, bcstdvar$time_s20),
+    "rising.length" = c(rep(c(bvardcst$time.80 - bvardcst$decline.length.80),4), rep(bcstdvar$time_decline,4)),
+    "declen.relative.rise" = c(bvardcst$decline.length.80, bvardcst$decline.length.50, bvardcst$decline.length.20, rep(NA,2000), bcstdvar$decline.length.80, bcstdvar$decline.length.50, bcstdvar$decline.length.20, rep(NA,2000))/c(rep(c(bvardcst$time.80 - bvardcst$decline.length.80),4), rep(bcstdvar$time_decline,4)),
+    "lambda.init" = c(rep(bvardcst$lambda.init.sim.80,4),rep(bcstdvar$lambda.sim,4)),
+    "lambda.final" = c(bvardcst$lambda.final.sim.80, bvardcst$lambda.final.sim.50, bvardcst$lambda.final.sim.20, bvardcst$lambda.final.sim.s20, rep(bcstdvar$lambda.sim,4)),
+    "mu.init" = c(rep(bvardcst$mu.sim.80,4),rep(bcstdvar$mu_0.sim,4)),
+    "mu.final" = c(rep(bvardcst$mu.sim.80,4), bcstdvar$mu_f.sim.80, bcstdvar$mu_f.sim.50, bcstdvar$mu_f.sim.20, bcstdvar$mu_f.sim.s20),
+    "r.init" = c(rep(bvardcst$lambda.init.sim.80,4),rep(bcstdvar$lambda.sim,4)) - c(rep(bvardcst$mu.sim.80,4),rep(bcstdvar$mu_0.sim,4)),
+    "r.final" = c(bvardcst$lambda.final.sim.80, bvardcst$lambda.final.sim.50, bvardcst$lambda.final.sim.20, bvardcst$lambda.final.sim.s20, rep(bcstdvar$lambda.sim,4)) - c(rep(bvardcst$mu.sim.80,4), bcstdvar$mu_f.sim.80, bcstdvar$mu_f.sim.50, bcstdvar$mu_f.sim.20, bcstdvar$mu_f.sim.s20),
+    "epsilon.init" = c(rep(bvardcst$lambda.init.sim.80,4),rep(bcstdvar$lambda.sim,4))/c(rep(bvardcst$mu.sim.80,4),rep(bcstdvar$mu_0.sim,4)),
+    "epsilon.final" = c(bvardcst$lambda.final.sim.80, bvardcst$lambda.final.sim.50, bvardcst$lambda.final.sim.20, bvardcst$lambda.final.sim.s20, rep(bcstdvar$lambda.sim,4))/c(rep(bvardcst$mu.sim.80,4), bcstdvar$mu_f.sim.80, bcstdvar$mu_f.sim.50, bcstdvar$mu_f.sim.20, bcstdvar$mu_f.sim.s20),
+    "time" = factor(rep(rep(c("-80%","-50%","-20%","short20"),each=2000),2), levels = c("short20", "-20%", "-50%", "-80%")),
+    "scenario" = c(rep("sp_var",8000),rep("ex_var",8000))
+)
+
+ggplot(data = fulldata, aes(x = gamma.c)) +
+    geom_histogram(aes(fill = scenario), alpha = 0.5, binwidth=0.01, position = "identity") +
+    scale_fill_manual(values = c(bvdc.col(10)[5], bcdv.col(10)[5])) +
+    #scale_colour_manual(values = c(bvdc.col(10)[10], bcdv.col(10)[10])) +
+    geom_vline(xintercept = 0 , linetype = "dashed") +
+    facet_grid(time ~ .) +
+    xlab("Corrected Gamma") +
+    ylab("Frequency") +
+    theme_bw() +
+    theme(legend.position = "bottom")
+
+ggplot(data = subset(fulldata, gamma.orig >= quantile(fulldata$gamma.orig,0.01, na.rm=TRUE)), aes(x = gamma.orig)) +
+    geom_histogram(aes(fill = scenario), alpha = 0.5, binwidth=1, position = "identity") +
+    scale_fill_manual(values = c(bvdc.col(10)[5], bcdv.col(10)[5])) +
+    #scale_colour_manual(values = c(bvdc.col(10)[10], bcdv.col(10)[10])) +
+    geom_vline(xintercept = 0 , linetype = "dashed") +
+    facet_grid(time ~ .) +
+    xlab("Original Gamma") +
+    ylab("Frequency") +
+    theme_bw() +
+    theme(legend.position = "bottom")
+
+ggplot(data = subset(fulldata, declen <= quantile(fulldata$declen, 0.99, na.rm=TRUE)), aes(x = declen)) +
+    geom_histogram(aes(fill = scenario), alpha = 0.5, binwidth=0.5, position = "identity") +
+    scale_fill_manual(values = c(bvdc.col(10)[5], bcdv.col(10)[5])) +
+    #scale_colour_manual(values = c(bvdc.col(10)[10], bcdv.col(10)[10])) +
+    #geom_vline(xintercept = 0 , linetype = "dashed") +
+    facet_grid(time ~ .) +
+    xlab("Decline Length") +
+    ylab("Frequency") +
+    theme_bw() +
+    theme(legend.position = "bottom")
+
+ggplot(data = subset(fulldata, ntip <= quantile(fulldata$ntip, 0.99, na.rm = TRUE)), aes(x = ntip)) +
+    geom_histogram(aes(fill = scenario), alpha = 0.5, binwidth = 0.05, position = "identity") +
+    scale_fill_manual(values = c(bvdc.col(10)[5], bcdv.col(10)[5])) +
+    #scale_colour_manual(values = c(bvdc.col(10)[10], bcdv.col(10)[10])) +
+    #geom_vline(xintercept = 0 , linetype = "dashed") +
+    facet_grid(time ~ .) +
+    xlab("Number of Tips") +
+    ylab("Frequency") +
+    scale_x_log10() +
+    theme_bw() +
+    theme(legend.position = "bottom")
+
+ggplot(data = subset(fulldata, ntip <= quantile(fulldata$ntip, 0.99, na.rm = TRUE)), aes(x = ntip)) +
+    geom_histogram(aes(fill = scenario), alpha = 0.5, binwidth = 0.05, position = "identity") +
+    scale_fill_manual(values = c(bvdc.col(10)[5], bcdv.col(10)[5])) +
+    #scale_colour_manual(values = c(bvdc.col(10)[10], bcdv.col(10)[10])) +
+    #geom_vline(xintercept = 0 , linetype = "dashed") +
+    facet_grid(time ~ .) +
+    xlab("Number of Tips") +
+    ylab("Frequency") +
+    scale_x_log10() +
+    theme_bw() +
+    theme(legend.position = "bottom")
+
